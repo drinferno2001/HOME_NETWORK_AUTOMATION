@@ -1,0 +1,65 @@
+---
+################################
+# SET FREEBSD-BASED PARAMETERS #
+################################
+#
+#- name: Configure Host Parameters
+#  hosts: Gateway  
+#  tasks: 
+#    - name: Set Hostname
+#      ansible.builtin.replace:
+#        path: /conf/config.xml
+#        regexp: '<hostname>.*<\/hostname>'
+#        replace: '<hostname>XENON-DEV</hostname>'
+#    - name: Reboot Device
+#      ansible.builtin.reboot:
+#        msg: 'Reboot initiated to update hostname.'
+#        reboot_command: /sbin/reboot
+#        test_command: whoami
+# 
+###################################################
+# INSTALL RELEVANT SYSTEM PACKAGES/PYTHON MODULES #
+###################################################
+
+- name: Install LXML
+  hosts: Gateway
+  tasks:
+      - ansible.builtin.pip:
+          name: lxml
+# 
+#############################################
+# SET OPNSENSE FIREWALL-SPECIFIC PARAMETERS #
+#############################################
+#
+#- name: Configure VLAN Interfaces
+#  hosts: Gateway
+#  # Executes modules local (interact via OPNSENSE API)
+#  connection: local
+#  module_defaults: 
+#    ansibleguy.opnsense.interface_vlan: 
+#      firewall: '{{ inventory_hostname }}'
+#      api_credential_file: '/root/ansible_playbooks/opnsense_api_key.txt'
+#      ssl_verify: false 
+#  tasks:
+#    - name: Add VLAN 10 (MGMT)
+#      ansibleguy.opnsense.interface_vlan:
+#        description: 'MGMT VLAN'
+#        interface: 'vtnet0'
+#        vlan: 10
+#        reload: true
+#
+#
+#- name: Configure VLAN Interface Assignments
+#  hosts: Gateway
+#  tasks:
+#    - name: Assign VLAN 10 Interface
+#      community.general.xml:
+#        path: /conf/config.xml
+#        content: 'text'
+#        xpath: '/opnsense/interfaces/wan/if'
+#      register: output
+#    - name: Output Test
+#      ansible.builtin.debug:
+#        var: output
+#
+...
