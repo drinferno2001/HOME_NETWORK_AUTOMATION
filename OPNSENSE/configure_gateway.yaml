@@ -1,0 +1,127 @@
+---
+############################################
+# OPNSENSE FIREWALL CONFIGURATION PLAYBOOK #
+############################################
+#
+###################################################
+# INSTALL RELEVANT SYSTEM PACKAGES/PYTHON MODULES #
+###################################################
+#
+# SETUP PYTHON VIRTUAL ENVIRONMENT
+# 
+# Python (with Python3 meta port) is already installed
+# but we want to keep dependencies clean by creating a virtual
+# environment
+#   
+- name: Create Python Virtual Environment 
+  hosts: Gateway
+  tasks:
+    - ansible.builtin.command: python3 -m venv {{ venv_path }}
+      args:
+        creates: "{{ venv_path }}"
+      register: venv_create_res
+    - ansible.builtin.debug:
+        msg: "{{ venv_create_res }}"
+  # Use default OPNSENSE interpreter for setting up the environment initially
+  vars:
+    ansible_python_interpreter: "{{ initial_python_interpreter }}"
+#
+# UPDATE ENVIRONMENT'S PACKAGE MANAGER TO LATEST VERSION 
+#
+- name: Upgrade PIP
+  hosts: Gateway
+  tasks:
+    - name: "Execute Command"
+      ansible.builtin.command: "python3 -m pip install --upgrade pip"
+      register: pip_update_res
+
+    - name: "Log Output"
+      ansible.builtin.debug:
+        msg: "{{ pip_update_res }}"
+
+#
+# INSTALL LXML (FOR PARSING/MODIFYING OPNSENSE CONFIGURATION AT /CONF/CONFIG.XML) 
+#
+- name: Install LXML Package
+  hosts: Gateway
+  tasks:
+    - block:
+        - name: "Execute Command"
+          ansible.builtin.pip:
+            name: lxml
+          register: lxml_install_res
+        - name: "Log Output"
+          ansible.builtin.debug:
+            msg: "{{ lxml_install_res }}"
+      rescue:
+        # HANDLE CASE IN CHECKED MODE WHERE PIP MIGHT NOT BE INSTALLED
+        - name: Checked Task Failure - {{ ansible_failed_task.name }}
+          ansible.builtin.debug:
+            msg: "This is to be expected since PIP hasn't been installed yet."
+          when: 
+            - ansible_check_mode
+            - ansible_failed_task.name == "Execute Command"
+            - ansible_failed_result.msg is search("pip needs to be installed")
+          changed_when: true
+
+        # ERROR OUT ON ALL OTHER CASES
+        - name: Production Task Failure - {{ ansible_failed_task.name }}
+          ansible.builtin.fail:
+            msg: "LXML python package installed failed. See logs for more details."
+          when: not ansible_check_mode
+#
+################################
+# SET FREEBSD-BASED PARAMETERS #
+################################
+#
+#- name: Configure Host Parameters
+#  hosts: Gateway
+#  tasks:
+#    - name: Set Hostname
+#      ansible.builtin.replace:
+#        path: /conf/config.xml
+#        regexp: '<hostname>.*<\/hostname>'
+#        replace: '<hostname>XENON-DEV</hostname>'
+#    - name: Reboot Device
+#      ansible.builtin.reboot:
+#        msg: 'Reboot initiated to update hostname.'
+#        reboot_command: /sbin/reboot
+#        test_command: whoami
+#
+ 
+#############################################
+# SET OPNSENSE FIREWALL-SPECIFIC PARAMETERS #
+#############################################
+#
+#- name: Configure VLAN Interfaces
+#  hosts: Gateway
+#  # Executes modules local (interact via OPNSENSE API)
+#  connection: local
+#  module_defaults: 
+#    ansibleguy.opnsense.interface_vlan: 
+#      firewall: '{{ inventory_hostname }}'
+#      api_credential_file: '/root/ansible_playbooks/opnsense_api_key.txt'
+#      ssl_verify: false 
+#  tasks:
+#    - name: Add VLAN 10 (MGMT)
+#      ansibleguy.opnsense.interface_vlan:
+#        description: 'MGMT VLAN'
+#        interface: 'vtnet0'
+#        vlan: 10
+#        reload: true
+#
+#
+#- name: Configure VLAN Interface Assignments
+#  hosts: Gateway
+#  tasks:
+#    - name: Assign VLAN 10 Interface
+#      community.general.xml:
+#        path: /conf/config.xml
+#        content: 'text'
+#        xpath: '/opnsense/interfaces/wan/if'
+#      register: output
+#    - name: Output Test
+#      ansible.builtin.debug:
+#        var: output
+...
+
