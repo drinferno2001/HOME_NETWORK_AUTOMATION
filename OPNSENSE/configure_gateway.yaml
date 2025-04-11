@@ -3,12 +3,10 @@
 # OPNSENSE FIREWALL CONFIGURATION PLAYBOOK #
 ############################################
 #
-###################################################
-# INSTALL RELEVANT SYSTEM PACKAGES/PYTHON MODULES #
-###################################################
+####################################
+# SETUP PYTHON VIRTUAL ENVIRONMENT #
+####################################
 #
-# SETUP PYTHON VIRTUAL ENVIRONMENT
-# 
 # Python (with Python3 meta port) is already installed
 # but we want to keep dependencies clean by creating a virtual
 # environment
@@ -16,56 +14,90 @@
 - name: Create Python Virtual Environment 
   hosts: Gateway
   tasks:
-    - ansible.builtin.command: python3 -m venv {{ venv_path }}
+    - name: Execute Command      
+      ansible.builtin.command: python3 -m venv {{venv_path}}
       args:
-        creates: "{{ venv_path }}"
+        creates: "{{venv_path}}"
       register: venv_create_res
-    - ansible.builtin.debug:
-        msg: "{{ venv_create_res }}"
-  # Use default OPNSENSE interpreter for setting up the environment initially
+    - name: Log Output
+      ansible.builtin.debug:
+        msg: "{{venv_create_res}}"
+# Use default OPNSENSE interpreter for setting up the environment initially
   vars:
-    ansible_python_interpreter: "{{ initial_python_interpreter }}"
+    ansible_python_interpreter: "{{initial_python_interpreter}}"
 #
-# UPDATE ENVIRONMENT'S PACKAGE MANAGER TO LATEST VERSION 
+############################################
+# LOG CHOSEN INTERPRETER THAT WILL BE USED #
+############################################
+#
+- name: Print Interpreter
+  hosts: Gateway
+  tasks:
+    - name: Log Output
+      ansible.builtin.debug:
+        msg: "{{interpreter_log_message}}"
+#
+##########################################################
+# UPDATE ENVIRONMENT'S PACKAGE MANAGER TO LATEST VERSION #
+##########################################################
 #
 - name: Upgrade PIP
   hosts: Gateway
   tasks:
-    - name: "Execute Command"
-      ansible.builtin.command: "python3 -m pip install --upgrade pip"
-      register: pip_update_res
-
-    - name: "Log Output"
-      ansible.builtin.debug:
-        msg: "{{ pip_update_res }}"
-
+    - block:
+      - ansible.builtin.debug:
+          msg: "{{ansible_python_interpreter}}"
+      - name: Execute Command
+        ansible.builtin.pip:
+          name: pip
+          state: latest
+          extra_args: --upgrade
+        register: pip_update_res
+      - name: Log Output
+        ansible.builtin.debug:
+          msg: "{{pip_update_res}}"
+      rescue:
+        # HANDLE CASE IN CHECKED MODE WHERE PIP MIGHT NOT BE INSTALLED
+        - name: Checked Task Failure - {{ansible_failed_task.name}}
+          ansible.builtin.debug:
+            msg: This is to be expected since PIP hasn't been installed yet.
+          when:
+            - ansible_check_mode
+            - ansible_failed_task.name == "Execute Command"
+            - ansible_failed_result.msg is search("pip needs to be installed")
+          changed_when: true
+        # ERROR OUT ON ALL OTHER CASES
+        - name: Production Task Failure - {{ansible_failed_task.name}}
+          ansible.builtin.fail:
+            msg: "PIP python package upgrade failed. See logs for more details."
+          when: not ansible_check_mode
 #
-# INSTALL LXML (FOR PARSING/MODIFYING OPNSENSE CONFIGURATION AT /CONF/CONFIG.XML) 
-#
+###################################################################################
+# INSTALL LXML (FOR PARSING/MODIFYING OPNSENSE CONFIGURATION AT /CONF/CONFIG.XML) #
+###################################################################################
 - name: Install LXML Package
   hosts: Gateway
   tasks:
     - block:
-        - name: "Execute Command"
+        - name: Execute Command
           ansible.builtin.pip:
             name: lxml
           register: lxml_install_res
-        - name: "Log Output"
+        - name: Log Output
           ansible.builtin.debug:
-            msg: "{{ lxml_install_res }}"
+            msg: "{{lxml_install_res}}"
       rescue:
         # HANDLE CASE IN CHECKED MODE WHERE PIP MIGHT NOT BE INSTALLED
-        - name: Checked Task Failure - {{ ansible_failed_task.name }}
+        - name: Checked Task Failure - {{ansible_failed_task.name}}
           ansible.builtin.debug:
-            msg: "This is to be expected since PIP hasn't been installed yet."
+            msg: This is to be expected since PIP hasn't been installed yet.
           when: 
             - ansible_check_mode
             - ansible_failed_task.name == "Execute Command"
             - ansible_failed_result.msg is search("pip needs to be installed")
           changed_when: true
-
         # ERROR OUT ON ALL OTHER CASES
-        - name: Production Task Failure - {{ ansible_failed_task.name }}
+        - name: Production Task Failure - {{ansible_failed_task.name}}
           ansible.builtin.fail:
             msg: "LXML python package installed failed. See logs for more details."
           when: not ansible_check_mode
