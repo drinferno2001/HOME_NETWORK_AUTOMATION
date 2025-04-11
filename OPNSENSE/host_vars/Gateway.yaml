@@ -15,6 +15,7 @@ ansible_python_interpreter: "{{(ansible_check_mode == true) | ternary(initial_py
 #
 # Interpreter Log Message (to be displayed at start of playbook execution):
 interpreter_log_message: >- 
-  {{(ansible_check_mode == true) | ternary('CHECK MODE SELECTED! USING INTERPRETER','NORMAL MODE SELECTED! USING INTERPRETER')}}: 
+  {{(ansible_check_mode == true) | ternary('CHECK MODE SELECTED!','NORMAL MODE SELECTED!')}}
+  USING INTERPRETER:
   [{{ansible_python_interpreter}}]
 ...
