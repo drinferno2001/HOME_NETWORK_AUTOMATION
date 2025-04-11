@@ -13,4 +13,8 @@ venv_interpreter_path: "{{venv_path}}/bin/python3"
 #
 ansible_python_interpreter: "{{ (ansible_check_mode == true) | ternary(initial_python_interpreter, venv_interpreter_path) }}"
 #
+# Interpreter Log Message (to be displayed at start of playbook execution):
+interpreter_log_message: >- 
+  {{(ansible_check_mode == true) | ternary('CHECK MODE SELECTED! USING INTERPRETER','NORMAL MODE SELECTED! USING INTERPRETER')}}: 
+  [{{ansible_python_interpreter}}]
 ...

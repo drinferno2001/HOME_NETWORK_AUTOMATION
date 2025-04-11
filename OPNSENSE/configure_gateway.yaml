@@ -3,6 +3,17 @@
 # OPNSENSE FIREWALL CONFIGURATION PLAYBOOK #
 ############################################
 #
+############################################
+# LOG CHOSEN INTERPRETER THAT WILL BE USED #
+############################################
+#
+- name: Print Interpreter
+  hosts: Gateway
+  tasks: 
+    - name: Log Output
+      ansible.builtin.debug:
+        msg: "{{interpreter_log_message}}"
+#
 ###################################################
 # INSTALL RELEVANT SYSTEM PACKAGES/PYTHON MODULES #
 ###################################################
