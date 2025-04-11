@@ -11,7 +11,7 @@ venv_interpreter_path: "{{venv_path}}/bin/python3"
 # Main Interpreter (after virtual environment setup)
 # (this is toggled to match the initial interpreter when running as checked so that conditional plays are handled correctly)
 #
-ansible_python_interpreter: "{{ (ansible_check_mode == true) | ternary(initial_python_interpreter, venv_interpreter_path) }}"
+ansible_python_interpreter: "{{(ansible_check_mode == true) | ternary(initial_python_interpreter, venv_interpreter_path)}}"
 #
 # Interpreter Log Message (to be displayed at start of playbook execution):
 interpreter_log_message: >- 

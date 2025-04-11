@@ -27,30 +27,30 @@
 - name: Create Python Virtual Environment 
   hosts: Gateway
   tasks:
-    - name: "Execute Command"
-      ansible.builtin.command: python3 -m venv {{ venv_path }}
+    - name: Execute Command      
+      ansible.builtin.command: python3 -m venv {{venv_path}}
       args:
-        creates: "{{ venv_path }}"
+        creates: "{{venv_path}}"
       register: venv_create_res
-    - name: "Log Output"
+    - name: Log Output
       ansible.builtin.debug:
-        msg: "{{ venv_create_res }}"
+        msg: "{{venv_create_res}}"
   # Use default OPNSENSE interpreter for setting up the environment initially
   vars:
-    ansible_python_interpreter: "{{ initial_python_interpreter }}"
+    ansible_python_interpreter: "{{initial_python_interpreter}}"
 #
 # UPDATE ENVIRONMENT'S PACKAGE MANAGER TO LATEST VERSION 
 #
 - name: Upgrade PIP
   hosts: Gateway
   tasks:
-    - name: "Execute Command"
-      ansible.builtin.command: "python3 -m pip install --upgrade pip"
+    - name: Execute Command
+      ansible.builtin.command: python3 -m pip install --upgrade pip
       register: pip_update_res
 
-    - name: "Log Output"
+    - name: Log Output
       ansible.builtin.debug:
-        msg: "{{ pip_update_res }}"
+        msg: "{{pip_update_res}}"
 
 #
 # INSTALL LXML (FOR PARSING/MODIFYING OPNSENSE CONFIGURATION AT /CONF/CONFIG.XML) 
@@ -59,18 +59,18 @@
   hosts: Gateway
   tasks:
     - block:
-        - name: "Execute Command"
+        - name: Execute Command
           ansible.builtin.pip:
             name: lxml
           register: lxml_install_res
-        - name: "Log Output"
+        - name: Log Output
           ansible.builtin.debug:
-            msg: "{{ lxml_install_res }}"
+            msg: "{{lxml_install_res}}"
       rescue:
         # HANDLE CASE IN CHECKED MODE WHERE PIP MIGHT NOT BE INSTALLED
-        - name: Checked Task Failure - {{ ansible_failed_task.name }}
+        - name: Checked Task Failure - {{ansible_failed_task.name}}
           ansible.builtin.debug:
-            msg: "This is to be expected since PIP hasn't been installed yet."
+            msg: This is to be expected since PIP hasn't been installed yet.
           when: 
             - ansible_check_mode
             - ansible_failed_task.name == "Execute Command"
@@ -78,7 +78,7 @@
           changed_when: true
 
         # ERROR OUT ON ALL OTHER CASES
-        - name: Production Task Failure - {{ ansible_failed_task.name }}
+        - name: Production Task Failure - {{ansible_failed_task.name}}
           ansible.builtin.fail:
             msg: "LXML python package installed failed. See logs for more details."
           when: not ansible_check_mode
