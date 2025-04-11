@@ -16,11 +16,13 @@
 - name: Create Python Virtual Environment 
   hosts: Gateway
   tasks:
-    - ansible.builtin.command: python3 -m venv {{ venv_path }}
+    - name: "Execute Command"
+      ansible.builtin.command: python3 -m venv {{ venv_path }}
       args:
         creates: "{{ venv_path }}"
       register: venv_create_res
-    - ansible.builtin.debug:
+    - name: "Log Output"
+      ansible.builtin.debug:
         msg: "{{ venv_create_res }}"
   # Use default OPNSENSE interpreter for setting up the environment initially
   vars:
