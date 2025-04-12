@@ -1,0 +1,11 @@
+---
+#######################################################
+# MASTER OPNSENSE CONFIGURATION CONSTRUCTION PLAYBOOK #
+#######################################################
+#
+- name: Build OPNSENSE Firewall Configuration
+  hosts: OPNSENSE_Instance
+  roles:
+   - opnsense_conf_setup
+#
+...
