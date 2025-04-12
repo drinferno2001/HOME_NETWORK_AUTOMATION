@@ -37,19 +37,20 @@
       ansible.builtin.debug:
         msg: "{{interpreter_log_message}}"
 #
-##########################################################
-# UPDATE ENVIRONMENT'S PACKAGE MANAGER TO LATEST VERSION #
-##########################################################
+####################################################################################
+# UPDATE ENVIRONMENT'S PYTHON MODULE INSTALLATION/UPGRADE TOOLS TO LATEST VERSIONS #
+####################################################################################
 #
-- name: Upgrade PIP
+- name: Install/Upgrade PIP, SETUPTOOLS, and WHEEL
   hosts: Gateway
   tasks:
     - block:
-      - ansible.builtin.debug:
-          msg: "{{ansible_python_interpreter}}"
       - name: Execute Command
         ansible.builtin.pip:
-          name: pip
+          name: 
+            - pip
+            - setuptools
+            - wheel
           state: latest
           extra_args: --upgrade
         register: pip_update_res
@@ -72,9 +73,28 @@
             msg: "PIP python package upgrade failed. See logs for more details."
           when: not ansible_check_mode
 #
+####################################################
+# INSTALL OS PRE-REQUISITES FOR LXML PYTHON MODULE #
+####################################################
+#
+- name: Install FreeBSD Packages (libxml2, libxslt)
+  hosts: Gateway
+  tasks:
+    - name: Execute Command
+      community.general.pkgng:
+        name: 
+          - libxml2
+          - libxslt
+        state: latest
+      register: os_pkg_install_res
+    - name: Log Output
+      ansible.builtin.debug:
+        msg: "{{os_pkg_install_res}}"
+#
 ###################################################################################
 # INSTALL LXML (FOR PARSING/MODIFYING OPNSENSE CONFIGURATION AT /CONF/CONFIG.XML) #
 ###################################################################################
+#
 - name: Install LXML Package
   hosts: Gateway
   tasks:
