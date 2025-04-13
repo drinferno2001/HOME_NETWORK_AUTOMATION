@@ -22,22 +22,26 @@
       ansible.builtin.stat:
         path: "{{venv_path}}"
       register: venv_status
-# Use default OPNSENSE interpreter for setting up the environment initially
+  # Use system OPNSENSE interpreter for setting up the virtual environment initially
   vars:
-    ansible_python_interpreter: "{{initial_python_interpreter}}"
+    ansible_python_interpreter: "{{system_python_interpreter}}"
 
-- name: Log Virtual Environment Directory Status / Intended Actions
+# Log Status Of Virtual Environment (And Next Steps)
+- name: Log Virtual Environment Status
   hosts: OPNSENSE_Instance
   tasks:
-    - ansible.builtin.debug:
+    - name: Print Status Message 
+      ansible.builtin.debug:
         msg: "{{venv_status.stat.exists | ternary(exists_msg, not_exists_msg)}}"
   vars:
     not_exists_msg: >-
-          Python virtual environment doesn't exist.
+          Python virtual environment doesn't exist (skipping all environment actions...).
           If you're running in changed mode, it will need to be created
           beforehand by running this playbook or by creating it manually.
     exists_msg: >- 
           Python virtual environment exists. Processing...
+    # Use system OPNSENSE interpreter for checking whether the virtual environment exists
+    ansible_python_interpreter: "{{system_python_interpreter}}"
 #
 ###########################################################################
 # EXECUTE ROLE TO SETUP REST OF ENVIRONMENT (INSTALL ALL NEEDED PACKAGES) #
@@ -47,5 +51,11 @@
   hosts: OPNSENSE_Instance
   roles:
     - role: opnsense_env_setup 
+      vars:
+        # Use virtual environment interpreter for rest of setup
+        ansible_python_interpreter: "{{venv_python_interpreter}}"
       when: venv_status.stat.exists
+  vars:
+    # Use system OPNSENSE interpreter for checking above 'when' condition
+    ansible_python_interpreter: "{{system_python_interpreter}}"
 ...
