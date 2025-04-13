@@ -1,21 +1,10 @@
 ---
-# Initial Interpreter (before virtual environment setup)
+# System Interpreter (before virtual environment setup)
 #
-initial_python_interpreter: /usr/local/bin/python3
+system_python_interpreter: /usr/local/bin/python3
 #
-# Virtual Environment Directory Path
+# Virtual Environment Directory Path and Interpreter
 #
 venv_path: /root/python-virtual-environments/ansible
-venv_interpreter_path: "{{venv_path}}/bin/python3"
-#
-# Main Interpreter (after virtual environment setup)
-# (this is toggled to match the initial interpreter when running as checked so that conditional plays are handled correctly)
-#
-ansible_python_interpreter: "{{(ansible_check_mode == true) | ternary(initial_python_interpreter, venv_interpreter_path)}}"
-#
-# Interpreter Log Message (to be displayed at start of playbook execution):
-interpreter_log_message: >- 
-  {{(ansible_check_mode == true) | ternary('CHECK MODE SELECTED!','NORMAL MODE SELECTED!')}}
-  USING INTERPRETER:
-  [{{ansible_python_interpreter}}]
+venv_python_interpreter: "{{venv_path}}/bin/python3"
 ...
