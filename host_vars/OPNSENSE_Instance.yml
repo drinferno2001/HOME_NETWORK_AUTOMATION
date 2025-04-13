@@ -1,0 +1,10 @@
+---
+# System Interpreter (before virtual environment setup)
+#
+system_python_interpreter: /usr/local/bin/python3
+#
+# Virtual Environment Directory Path and Interpreter
+#
+venv_path: /root/python-virtual-environments/ansible
+venv_python_interpreter: "{{venv_path}}/bin/python3"
+...

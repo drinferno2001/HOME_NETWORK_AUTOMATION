@@ -1,0 +1,61 @@
+---
+###########################################################
+# MASTER OPNSENSE ANSIBLE MANAGEMENT ENVIRONMENT PLAYBOOK #
+###########################################################
+#
+####################################
+# SETUP PYTHON VIRTUAL ENVIRONMENT #
+####################################
+#
+# Python (with Python3 meta port) is already installed
+# but we want to keep dependencies clean by creating a virtual
+# environment
+#
+- name: Setup Python Virtual Environment
+  hosts: OPNSENSE_Instance
+  tasks:
+    - name: Utilize VENV Module To Create Virtual Environment At [{{venv_path}}]
+      ansible.builtin.command: python3 -m venv {{venv_path}}
+      args:
+        creates: "{{venv_path}}"
+    - name: Pulling Virtual Environment Directory Status
+      ansible.builtin.stat:
+        path: "{{venv_path}}"
+      register: venv_status
+  # Use system OPNSENSE interpreter for setting up the virtual environment initially
+  vars:
+    ansible_python_interpreter: "{{system_python_interpreter}}"
+
+# Log Status Of Virtual Environment (And Next Steps)
+- name: Log Virtual Environment Status
+  hosts: OPNSENSE_Instance
+  tasks:
+    - name: Print Status Message 
+      ansible.builtin.debug:
+        msg: "{{venv_status.stat.exists | ternary(exists_msg, not_exists_msg)}}"
+  vars:
+    not_exists_msg: >-
+          Python virtual environment doesn't exist (skipping all environment actions...).
+          If you're running in changed mode, it will need to be created
+          beforehand by running this playbook or by creating it manually.
+    exists_msg: >- 
+          Python virtual environment exists. Processing...
+    # Use system OPNSENSE interpreter for checking whether the virtual environment exists
+    ansible_python_interpreter: "{{system_python_interpreter}}"
+#
+###########################################################################
+# EXECUTE ROLE TO SETUP REST OF ENVIRONMENT (INSTALL ALL NEEDED PACKAGES) #
+###########################################################################
+#
+- name: Configure OPNSENSE Firewall Ansible Management Environment
+  hosts: OPNSENSE_Instance
+  roles:
+    - role: opnsense_env_setup 
+      vars:
+        # Use virtual environment interpreter for rest of setup
+        ansible_python_interpreter: "{{venv_python_interpreter}}"
+      when: venv_status.stat.exists
+  vars:
+    # Use system OPNSENSE interpreter for checking above 'when' condition
+    ansible_python_interpreter: "{{system_python_interpreter}}"
+...
