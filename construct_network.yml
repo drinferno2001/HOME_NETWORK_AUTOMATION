@@ -1,0 +1,12 @@
+---
+#############################################
+# MASTER HOME NETWORK CONSTRUCTION PLAYBOOK #
+#############################################
+#
+# Start role to generate OPNSense Firewall Configuration
+- name: Configure OPNSense Firewall
+  hosts: OPNSENSE_Instance
+  roles:
+    - opnsense
+#
+...
