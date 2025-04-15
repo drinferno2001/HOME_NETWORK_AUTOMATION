@@ -44,9 +44,15 @@
 #
 - block:
     - name: Installing Dependencies In Python Virtual Environment
-      import_tasks: install_dependencies.yml
-    - name: Configure System Parameters
-      import_tasks: system_params.yml
+      ansible.builtin.import_tasks: install_dependencies.yml
+    - name: Apply Firewall Configuration
+      ansible.builtin.import_tasks: firewall_config.yml
+    - name: Reboot Firewall
+      ansible.builtin.reboot:
+        msg: Rebooting to cement Ansible configuration...
   vars:
     ansible_python_interpreter: "{{venv_python_interpreter}}"
+  module_defaults:
+    community.general.xml:
+      path: "{{opnsense_config_file}}"
 ...

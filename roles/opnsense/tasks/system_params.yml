@@ -1,3 +1,0 @@
-- name:
-  ansible.builtin.debug:
-    msg: "TEST"
