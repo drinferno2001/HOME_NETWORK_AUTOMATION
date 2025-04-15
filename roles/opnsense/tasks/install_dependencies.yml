@@ -16,7 +16,7 @@
     state: latest
     extra_args: --upgrade
   register: pip_update_res
-- name: Log Python Tools Install/Upgrade Output
+- name: Log Python Tools Install/Upgrade
   ansible.builtin.debug:
     msg: "{{pip_update_res}}"
 #
@@ -31,7 +31,7 @@
       - libxslt
     state: latest
   register: os_pkg_install_res
-- name: Log FreeBSD OS Pre-requisities Install Output
+- name: Log FreeBSD OS Pre-requisities Installation
   ansible.builtin.debug:
     msg: "{{os_pkg_install_res}}"
 #
@@ -43,7 +43,7 @@
   ansible.builtin.pip:
     name: lxml
   register: lxml_install_res
-- name: Log LXML Installation Output
+- name: Log LXML Installation
   ansible.builtin.debug:
     msg: "{{lxml_install_res}}" 
 #
