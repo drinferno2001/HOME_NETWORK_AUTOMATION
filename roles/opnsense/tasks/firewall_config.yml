@@ -1,0 +1,15 @@
+---
+################################
+# APPLY FIREWALL CONFIGURATION #
+################################
+#
+################
+# SET HOSTNAME #
+################
+#
+- name: Set Hostname
+  community.general.xml:
+    xpath: /opnsense/system/hostname
+    value: "GATEWAY"
+  register: hostname_xml
+...
