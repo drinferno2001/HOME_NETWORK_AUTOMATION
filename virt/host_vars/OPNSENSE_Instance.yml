@@ -2,4 +2,9 @@
 # Set To System Interpreter (before virtual environment setup)
 #
 ansible_python_interpreter: /usr/local/bin/python3
+#
+# OPNSENSE Firewall Configuration Variables
+#
+# Hostname
+opnsense_hostname: Rubidium
 ...
