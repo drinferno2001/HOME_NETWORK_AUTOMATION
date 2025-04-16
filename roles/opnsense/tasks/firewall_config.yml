@@ -1,4 +1,15 @@
 ---
+##############################################
+# MAKE BACKUP OF EXISTING CONFIGURATION FILE #
+##############################################
+#
+- name: Backup {{config_file_path}}
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{config_file_path}}"
+    dest: "{{config_file_backup_dir}}/"
+    force: false
+#
 ################################
 # APPLY FIREWALL CONFIGURATION #
 ################################
@@ -10,6 +21,7 @@
 - name: Set Hostname
   community.general.xml:
     xpath: /opnsense/system/hostname
-    value: "GATEWAY"
+    value: "{{opnsense_hostname}}"
   register: hostname_xml
+#
 ...

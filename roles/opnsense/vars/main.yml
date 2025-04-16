@@ -5,5 +5,8 @@ venv_path: /root/python-virtual-environments/ansible
 venv_python_interpreter: "{{venv_path}}/bin/python3"
 #
 # OPNSense Configuration File
-opnsense_config_file: /conf/config.xml
+config_file_path: /conf/config.xml
+#
+# OPNSense Configuration File Backup Directory
+config_file_backup_dir: /conf/ansible-backups
 ...
