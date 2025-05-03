@@ -5,6 +5,8 @@
 #
 # Start role to generate OPNSense Firewall Configuration
 - name: Configure OPNSense Firewall
+  connection: local
+  gather_facts: true
   hosts: OPNSENSE_Instance
   roles:
     - opnsense
