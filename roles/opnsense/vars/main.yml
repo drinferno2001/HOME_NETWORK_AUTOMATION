@@ -1,7 +1,8 @@
 ---
 # Virtual Environment Directory Path and Interpreter
+# (Use Local Home Directory As Parent Directory)
 #
-venv_path: /root/python-virtual-environments/ansible
+venv_path: "{{ansible_env.HOME}}/python-virtual-environments/ansible"
 venv_python_interpreter: "{{venv_path}}/bin/python3"
 #
 # OPNSense Configuration File
