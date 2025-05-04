@@ -1,0 +1,35 @@
+---
+#
+##########################################
+# SETUP CONTROL NODE PRE-REQUISITES HERE #
+##########################################
+#
+####################################################
+# UPDATE APT CACHE AND UPGRADE ALL SYSTEM PACKAGES #
+####################################################
+#
+- name: Refresh APT Cache And Upgrade All System Packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: true
+  register: response
+- name: Log Cache Refresh And System Package Upgrades
+  ansible.builtin.debug:
+    msg: "{{response}}"
+#
+##############################
+# INSTALL LXML PYTHON MODULE #
+##############################
+#
+- name: Install Python LXML Module
+  ansible.builtin.apt:
+    name: 
+      - python3-lxml
+    state: latest
+  register: response
+- name: Python LXML Module Install Log
+  ansible.builtin.debug:
+    msg: "{{response}}"
+#
+...

@@ -1,10 +1,18 @@
 ---
-# Set To System Interpreter (before virtual environment setup)
+#############################
+# SYSTEM PYTHON INTERPRETER #
+#############################
 #
-ansible_python_interpreter: /usr/bin/python3
+opnsense_system_interpreter: /usr/local/bin/python3
 #
-# OPNSENSE Firewall Configuration Variables
+#############################################
+# OPNSENSE FIREWALL CONFIGURATION VARIABLES #
+#############################################
 #
-# Hostname
+############
+# HOSTNAME #
+############
+#
 opnsense_hostname: Rubidium
+#
 ...

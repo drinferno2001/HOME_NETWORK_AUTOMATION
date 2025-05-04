@@ -5,10 +5,15 @@
 #
 # Start role to generate OPNSense Firewall Configuration
 - name: Configure OPNSense Firewall
-  connection: local
   gather_facts: true
+  connection: local
   hosts: OPNSENSE_Instance
-  roles:
-    - opnsense
+  tasks: 
+    - name: Act In OPNSense Role
+      include_role:
+        name: opnsense
+  vars:
+    # (set to control node system python interpreter by default)
+    ansible_python_interpreter: "/usr/bin/python3"
 #
 ...

@@ -1,58 +1,46 @@
 ---
 #
-####################################
-# SETUP PYTHON VIRTUAL ENVIRONMENT #
-####################################
-#
-# Python (with Python3 meta port) is already installed
-# but we want to keep dependencies clean by creating a virtual
-# environment
-#
-- name: Utilize VENV Module To Create Virtual Environment At [{{venv_path}}]
-  ansible.builtin.command: python3 -m venv {{venv_path}}
-  args:
-    creates: "{{venv_path}}"
-#
-####################################################################
-# LOG STATUS OF VIRTUAL ENVIRONMENT (AND EXIT IF IT DOESN'T EXIST) #
-####################################################################
-#
-- name: Pulling Virtual Environment Directory Information...
-  ansible.builtin.stat:
-    path: "{{venv_path}}"
-  register: venv_status
-
-- name: Does The Virtual Environment Directory Exist?
-  ansible.builtin.debug:
-    msg: "{{venv_status.stat.exists | ternary(exists_msg, not_exists_msg)}}"
-  vars:
-    not_exists_msg: >-
-          Python virtual environment doesn't exist (skipping all environment actions...).
-          If you're running in changed mode, it will need to be created
-          before any further actions can be simulated.
-    exists_msg: >- 
-          Python virtual environment exists. Processing...
-
-- name: Do We End The Play?
-  ansible.builtin.meta: end_host
-  when: not venv_status.stat.exists
-#
-#########################################
-# BUILD OPNSENSE FIREWALL CONFIGURATION #
-#########################################
-# (all tasks after this point will use the virtual environment's interpreter)
+####################################################
+# SETTING UP PRE-REQUISITES ON UBUNTU CONTROL NODE #
+####################################################
 #
 - block:
-    - name: Installing Dependencies In Python Virtual Environment
-      ansible.builtin.import_tasks: install_dependencies.yml
-    - name: Apply Firewall Configuration
-      ansible.builtin.import_tasks: firewall_config.yml
-    #- name: Reboot Firewall
-    #  ansible.builtin.reboot:
-    #    msg: Rebooting to cement Ansible configuration...
-  vars:
-    ansible_python_interpreter: "{{venv_python_interpreter}}"
-  module_defaults:
-    community.general.xml:
-      path: "{{config_file_path}}"
+  - name: Installing Pre-Requisite OS Packages On Ubuntu Control Node
+    ansible.builtin.include_tasks: pre_requisites/control_node.yml
+  become: true
+  become_user: root
+  become_method: ansible.builtin.sudo
+#
+#################################################
+# PULL OPNSENSE MANAGED NODE CONFIGURATION FILE #
+#################################################
+#
+- block:
+  - name: Pulling OPNSense Managed Node Configuration File
+    ansible.builtin.include_tasks: pre_requisites/config_pull.yml
+  connection: paramiko
+  become: false
+  vars: 
+    ansible_python_interpreter: "{{opnsense_system_interpreter}}"
+#
+############################################
+# GENERATE OPNSENSE FIREWALL CONFIGURATION #
+############################################
+# Set Hostname
+#- name: CONFIG - HOSTNAME
+#  ansible.builtin.include_tasks: config/hostname.yml
+#  module_defaults:
+#    community.general.xml:
+#      path: "{{config_file_path}}"
+#
+###################
+# REBOOT FIREWALL #
+###################
+#
+#- name: Reboot Firewall
+#  ansible.builtin.reboot:
+#    msg: Rebooting to cement Ansible configuration...
+#  vars: 
+#    ansible_python_interpreter: "/usr/local/bin/python3"
+#
 ...

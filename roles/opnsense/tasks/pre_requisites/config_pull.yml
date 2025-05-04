@@ -1,0 +1,12 @@
+---
+#
+#################################################
+# PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
+#################################################
+#
+- name: Pull {{config_file_path}}
+  ansible.builtin.fetch:
+    src: "{{config_file_path}}"
+    dest: "{{ansible_env.HOME}}/ansible/opnsense-config"
+#
+...
