@@ -13,6 +13,6 @@ opnsense_system_interpreter: /usr/local/bin/python3
 # HOSTNAME #
 ############
 #
-opnsense_hostname: Rubidium
+opnsense_hostname: GATEWAY
 #
 ...
