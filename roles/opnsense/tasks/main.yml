@@ -15,10 +15,11 @@
 # PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
 #################################################
 #
-- name: Pull OPNSense Configuration File At [{{config_file_path}}]
+- name: CONTROL NODE - Pull OPNSense Configuration File At [{{config_file_path}}]
   ansible.builtin.fetch:
     src: "{{config_file_path}}"
-    dest: "{{ansible_env.HOME}}/ansible/opnsense-config"
+    dest: "{{control_node_config_file_path}}"
+    flat: true
   connection: paramiko
   become: false
   vars: 
@@ -27,12 +28,9 @@
 ############################################
 # GENERATE OPNSENSE FIREWALL CONFIGURATION #
 ############################################
-# Set Hostname
-#- name: CONFIG - HOSTNAME
-#  ansible.builtin.include_tasks: config/hostname.yml
-#  module_defaults:
-#    community.general.xml:
-#      path: "{{config_file_path}}"
+#
+- name: KICK OFF - BUILD FIREWALL CONFIGURATION
+  ansible.builtin.include_tasks: firewall_configs/configure.yml
 #
 ###################
 # REBOOT FIREWALL #
