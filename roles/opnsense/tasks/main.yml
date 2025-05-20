@@ -6,7 +6,7 @@
 #
 - block:
   - name: Installing Pre-Requisite OS Packages On Ubuntu Control Node
-    ansible.builtin.include_tasks: pre_requisites/control_node.yml
+    ansible.builtin.include_tasks: control_node_prep.yml
   become: true
   become_user: root
   become_method: ansible.builtin.sudo
