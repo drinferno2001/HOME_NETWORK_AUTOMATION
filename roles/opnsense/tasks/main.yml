@@ -12,12 +12,13 @@
   become_method: ansible.builtin.sudo
 #
 #################################################
-# PULL OPNSENSE MANAGED NODE CONFIGURATION FILE #
+# PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
 #################################################
 #
-- block:
-  - name: Pulling OPNSense Managed Node Configuration File
-    ansible.builtin.include_tasks: pre_requisites/config_pull.yml
+- name: Pull OPNSense Configuration File At [{{config_file_path}}]
+  ansible.builtin.fetch:
+    src: "{{config_file_path}}"
+    dest: "{{ansible_env.HOME}}/ansible/opnsense-config"
   connection: paramiko
   become: false
   vars: 
