@@ -4,7 +4,7 @@
 # VERIFY THAT CONFIGURATION FILE EXISTS ON CONTROL NODE FIRST #
 ###############################################################
 #
-- name: CONTROL NODE - Was OPNSense Configuration Pulled To [{{control_node_config_file_path}}]
+- name: CONTROL NODE - WAS OPNSENSE CONFIGURATION PULLED TO [{{control_node_config_file_path}}]?
   ansible.builtin.stat:
     path: "{{control_node_config_file_path}}"
   register: pulled_file

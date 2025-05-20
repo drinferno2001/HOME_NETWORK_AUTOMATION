@@ -4,12 +4,12 @@
 #############################################
 #
 # Start role to generate OPNSense Firewall Configuration
-- name: Configure OPNSense Firewall
+- name: CONFIGURE OPNSENSE FIREWALL
   gather_facts: true
   connection: local
   hosts: OPNSENSE_Instance
   tasks: 
-    - name: Act In OPNSense Role
+    - name: ACT IN OPNSENSE ROLE
       include_role:
         name: opnsense
   vars:

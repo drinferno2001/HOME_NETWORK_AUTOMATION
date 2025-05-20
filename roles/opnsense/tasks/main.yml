@@ -5,7 +5,7 @@
 ####################################################
 #
 - block:
-  - name: CONTROL NODE - Installing Pre-Requisite OS Packages
+  - name: CONTROL NODE - INSTALL PRE-REQUISITE OS PACKAGES
     ansible.builtin.include_tasks: control_node_prep.yml
   become: true
   become_user: root
@@ -15,7 +15,7 @@
 # PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
 #################################################
 #
-- name: CONTROL NODE - Pull OPNSense Configuration File At [{{config_file_path}}]
+- name: CONTROL NODE - PULL OPNSENSE CONFIGURATION FILE AT [{{config_file_path}}]
   ansible.builtin.fetch:
     src: "{{config_file_path}}"
     dest: "{{control_node_config_file_path}}"
@@ -29,7 +29,7 @@
 # GENERATE OPNSENSE FIREWALL CONFIGURATION #
 ############################################
 #
-- name: KICK OFF - BUILD FIREWALL CONFIGURATION
+- name: FIREWALL - PREP FOR CONFIGURATION BUILD
   ansible.builtin.include_tasks: firewall_configs/configure.yml
 #
 ###################

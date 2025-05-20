@@ -8,13 +8,13 @@
 # UPDATE APT CACHE AND UPGRADE ALL SYSTEM PACKAGES #
 ####################################################
 #
-- name: CONTROL NODE - Refresh APT Cache And Upgrade All System Packages
+- name: CONTROL NODE - REFRESH APT CACHE AND UPGRADE ALL SYSTEM PACKAGES
   ansible.builtin.apt:
     name: "*"
     state: latest
     update_cache: true
   register: response
-- name: Log Cache Refresh And System Package Upgrades
+- name: CONTROL NODE - REFRESH APT CACHE AND UPGRADE ALL SYSTEM PACKAGES (LOG)
   ansible.builtin.debug:
     msg: "{{response}}"
 #
@@ -22,13 +22,13 @@
 # INSTALL LXML PYTHON MODULE #
 ##############################
 #
-- name: CONTROL NODE - Install Python LXML Module
+- name: CONTROL NODE - INSTALL PYTHON LXML MODULE
   ansible.builtin.apt:
     name: 
       - python3-lxml
     state: latest
   register: response
-- name: Python LXML Module Install Log
+- name: CONTROL NODE - INSTALL PYTHON LXML MODULE (LOG)
   ansible.builtin.debug:
     msg: "{{response}}"
 #

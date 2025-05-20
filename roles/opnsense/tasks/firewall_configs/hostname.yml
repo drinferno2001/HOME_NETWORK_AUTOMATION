@@ -4,7 +4,7 @@
 # SET HOSTNAME #
 ################
 #
-- name: Set Hostname
+- name: FIREWALL - SET HOSTNAME
   community.general.xml:
     xpath: /opnsense/system/hostname
     value: "{{opnsense_hostname}}"
@@ -14,7 +14,7 @@
 # LOG IT #
 ##########
 #
-- name: Set Hostname (Log)
+- name: FIREWALL - SET HOSTNAME (LOG)
   ansible.builtin.debug:
     msg: "{{hostname_response}}"
 #
