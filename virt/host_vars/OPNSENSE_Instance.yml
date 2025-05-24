@@ -15,4 +15,32 @@ opnsense_system_interpreter: /usr/local/bin/python3
 #
 opnsense_hostname: GATEWAY
 #
+####################
+# VLAN DEFINITIONS #
+####################
+#
+opnsense_roas_parent_if: "vtnet0"
+#
+opnsense_vlan_defs: 
+  - tag: 10
+    desc: MGMT VLAN
+  - tag: 11
+    desc: RESTRICTED MGMT VLAN
+  - tag: 20
+    desc: PROXMOX BACKUP VLAN
+  - tag: 30
+    desc: SELF-HOSTED SERVICES VLAN
+  - tag: 40
+    desc: TOOLS4EVER VLAN
+  - tag: 50
+    desc: EXPERIMENTATION VLAN
+  - tag: 60
+    desc: CAMERA VLAN
+  - tag: 70
+    desc: IOT VLAN
+  - tag: 80
+    desc: FAMILY VLAN
+  - tag: 90
+    desc: GUEST VLAN
+#
 ...

@@ -34,6 +34,12 @@
   ############
   - name: FIREWALL - CONFIGURE HOSTNAME
     ansible.builtin.include_tasks: firewall_configs/hostname.yml
+  #########
+  # VLANS #
+  #########
+  - name: FIREWALL - CONFIGURE VLANS
+    ansible.builtin.include_tasks: ./vlans/configure.yml
+  ################
   module_defaults:
     community.general.xml:
       path: "{{control_node_config_file_path}}"

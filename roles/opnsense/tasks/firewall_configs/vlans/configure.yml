@@ -1,0 +1,28 @@
+---
+################################################
+# VLAN CONFIGURATION TASKS ARE KICKED OFF HERE #
+################################################
+#
+#############################
+# REMOVE DEFAULT VLAN ENTRY #
+#############################
+#
+- name: "FIREWALL - REMOVE DEFAULT VLAN CONFIGURATION"
+  community.general.xml:
+    xpath: "/opnsense/vlans/vlan[count(@uuid)=0]"
+    state: "absent"
+    pretty_print: true
+#
+###################
+# GENERATE VLANS  #
+###################
+#
+- name: FIREWALL - PROCESS PENDING VLAN CONFIGURATIONS
+  ansible.builtin.include_tasks: vlan.yml
+  loop:
+    "{{opnsense_vlan_defs}}"
+  loop_control:
+    label: "{{current_vlan.tag}}"
+    loop_var: current_vlan
+#
+...
