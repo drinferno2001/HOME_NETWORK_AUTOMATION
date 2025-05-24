@@ -11,25 +11,18 @@
   become_user: root
   become_method: ansible.builtin.sudo
 #
-#################################################
-# PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
-#################################################
+###################################
+# PREPARE FOR CONFIGURATION BUILD #
+###################################
 #
-- name: CONTROL NODE - PULL OPNSENSE CONFIGURATION FILE AT [{{config_file_path}}]
-  ansible.builtin.fetch:
-    src: "{{config_file_path}}"
-    dest: "{{control_node_config_file_path}}"
-    flat: true
-  connection: paramiko
-  become: false
-  vars: 
-    ansible_python_interpreter: "{{opnsense_system_interpreter}}"
+- name: FIREWALL - DOWNLOADING EXISTING CONFIGURATION FILE
+  ansible.builtin.include_tasks: config_file_prep.yml
 #
 ############################################
 # GENERATE OPNSENSE FIREWALL CONFIGURATION #
 ############################################
 #
-- name: FIREWALL - PREP FOR CONFIGURATION BUILD
+- name: FIREWALL - BUILD CONFIGURATION
   ansible.builtin.include_tasks: firewall_configs/configure.yml
 #
 ###################

@@ -1,0 +1,40 @@
+---
+#
+#################################################
+# PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
+#################################################
+#
+- name: CONTROL NODE - PULL OPNSENSE CONFIGURATION FILE AT [{{config_file_path}}]
+  ansible.builtin.fetch:
+    src: "{{config_file_path}}"
+    dest: "{{control_node_config_file_path}}"
+    flat: true
+  connection: paramiko
+  become: false
+  vars: 
+    ansible_python_interpreter: "{{opnsense_system_interpreter}}"
+#
+#########################################################
+# VERIFY THAT CONFIGURATION FILE EXISTS ON CONTROL NODE #
+#########################################################
+#
+- name: CONTROL NODE - WAS OPNSENSE CONFIGURATION PULLED TO [{{control_node_config_file_path}}]?
+  ansible.builtin.stat:
+    path: "{{control_node_config_file_path}}"
+  register: pulled_file
+#
+- name: CONTROL NODE - LOG CONFIG FILE QUERY STATUS
+  ansible.builtin.debug:
+    msg: "{{pulled_file.stat.exists | ternary(exists_msg, not_exists_msg)}}"
+  vars:
+    not_exists_msg: >-
+      [{{control_node_config_file_path}}] doesn't exist. (skipping all further actions...).
+      If you're running in changed mode, it will need to be pulled
+      beforehand by running this playbook in production or by pulling it manually.
+    exists_msg: >- 
+      [{{control_node_config_file_path}}] exists. Processing...
+#
+- name: CONTROL NODE - EXIT EXECUTION (IF APPLICABLE)
+  ansible.builtin.meta: end_host
+  when: not pulled_file.stat.exists
+...
