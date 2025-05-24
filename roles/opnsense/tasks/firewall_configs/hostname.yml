@@ -8,14 +8,5 @@
   community.general.xml:
     xpath: /opnsense/system/hostname
     value: "{{opnsense_hostname}}"
-  register: hostname_response
-#
-##########
-# LOG IT #
-##########
-#
-- name: FIREWALL - SET HOSTNAME (LOG)
-  ansible.builtin.debug:
-    msg: "{{hostname_response}}"
 #
 ...
