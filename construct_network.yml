@@ -15,5 +15,6 @@
   vars:
     # (set to control node system python interpreter by default)
     ansible_python_interpreter: "/usr/bin/python3"
+    control_node_config_file_path: "{{ansible_env.HOME}}/new_opnsense_config/config.xml"
 #
 ...

@@ -6,12 +6,6 @@
 opnsense_system_interpreter: /usr/local/bin/python3
 #
 #############################################
-# OPNSENSE FIREWALL CONFIGURATION FILE DUMP #
-#############################################
-#
-control_node_config_file_path: "{{ansible_env.HOME}}/new_opnsense_config/config.xml"
-#
-#############################################
 # OPNSENSE FIREWALL CONFIGURATION VARIABLES #
 #############################################
 #
