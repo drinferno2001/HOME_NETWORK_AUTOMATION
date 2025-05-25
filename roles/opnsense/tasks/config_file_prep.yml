@@ -1,0 +1,72 @@
+---
+#
+#################################################
+# PULL DOWN COPY OF EXISTING CONFIGURATION FILE #
+#################################################
+#
+- block:
+  - name: FIREWALL - PULL EXISTING CONFIG FILE STATS [{{config_file_path}}]
+    ansible.builtin.stat: 
+      path: "{{config_file_path}}"
+      checksum_algorithm: "sha512"
+      get_checksum: true
+    register: remote_file_metadata
+  - name: FIREWALL - PULL EXISTING CONFIG FILE ITSELF [{{config_file_path}}]
+    ansible.builtin.fetch:
+      src: "{{config_file_path}}"
+      dest: "{{control_node_config_file_path}}"
+      flat: true
+  connection: paramiko
+  become: false
+  vars: 
+    ansible_python_interpreter: "{{opnsense_system_interpreter}}"
+#
+###################################################################################
+# VERIFY THAT THE EXISTING CONFIGURATION FILE GOT PULLED DOWN TO THE CONTROL NODE #
+###################################################################################
+#
+- name: CONTROL NODE - DOES OPNSENSE CONFIG FILE EXIST AT [{{control_node_config_file_path}}]?
+  ansible.builtin.stat:
+    path: "{{control_node_config_file_path}}"
+    checksum_algorithm: "sha512"
+    get_checksum: true
+  register: local_file_metadata
+#
+- name: CONTROL NODE - LOG FILE EXISTENCE STATUS
+  ansible.builtin.debug:
+    msg: "{{local_file_metadata.stat.exists | ternary(exists_msg, not_exists_msg)}}"
+  vars:
+    not_exists_msg: >-
+      [{{control_node_config_file_path}}] doesn't exist.
+      If you're running in changed mode, it will need to be pulled
+      down manually beforehand. All further actions will be skipped...
+    exists_msg: >- 
+      [{{control_node_config_file_path}}] exists. Processing...
+#
+- name: "CONTROL NODE - END EXECUTION DUE TO MISSING LOCAL CONFIG FILE: [{{control_node_config_file_path}}]?"
+  ansible.builtin.meta: end_host
+  when: not local_file_metadata.stat.exists
+#
+################################################################################
+# VERIFY THAT LOCAL COPY OF CONFIG FILE IS THE SAME AS WHAT'S CURRENTLY IN USE #
+################################################################################
+# (Note: *This is for the sake of showcasing the right changes in 'Change' mode
+# and it should never be true in production runs*)
+- name: CONTROL NODE - COMPARE LOCAL CONFIG FILE TO EXISTING CONFIG FILE
+  ansible.builtin.debug:
+    msg: "{{(remote_file_metadata.stat.checksum == local_file_metadata.stat.checksum) | ternary(match_msg, no_match_msg)}}"
+  vars:
+    no_match_msg: >-
+      [{{control_node_config_file_path}}] exists on control node but has different content than 
+      what's existing on the managed node at [{{config_file_path}}].
+      If you're running in changed mode, it will need to be pulled down manually
+      to the control node beforehand. All further actions will be skipped...
+    match_msg: >- 
+      Local config file copy [{{control_node_config_file_path}}] and remote existing config 
+      [{{config_file_path}}] match. Processing...
+#
+- name: CONTROL NODE - END EXECUTION IF FILES DON'T MATCH?
+  ansible.builtin.meta: end_host
+  when: not remote_file_metadata.stat.checksum == local_file_metadata.stat.checksum
+#
+...
