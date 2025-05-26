@@ -1,0 +1,60 @@
+---
+#
+##################################
+# GENERATE VLAN ELEMENT (BY TAG) #
+##################################
+#
+- block:
+  ############
+  # SET UUID #
+  ############
+  - name: "FIREWALL - VLAN CONFIG - GENERATE UUID [{{generated_uuid}}]"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']"
+      attribute: uuid
+      value: "{{generated_uuid}}"
+      pretty_print: true
+  #############################
+  # STORE VLAN INTERFACE NAME #
+  #############################
+  - name: "FIREWALL - VLAN CONFIG - SET INTERFACE NAME [{{vlan_if}}]"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/vlanif"
+      value: '{{vlan_if}}'
+      pretty_print: true
+  ###################
+  # SET DESCRIPTION #
+  ###################
+  - name: "FIREWALL - VLAN CONFIG - SET DESCRIPTION [{{current_network.name}}]"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/descr"
+      value: "{{current_network.name}}"
+      pretty_print: true
+  #################
+  # SET PCP (QoS) #
+  #################
+  - name: "FIREWALL - VLAN CONFIG - SET PCP (L2 QoS) VALUE [0]"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/pcp"
+      value: "0"
+      pretty_print: true
+  #########################
+  # SET TRUNKING PROTOCOL #
+  #########################
+  - name: "FIREWALL - VLAN CONFIG - ENABLE TRUNKING PROTOCOL AUTO-SELECTION"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/proto"
+      pretty_print: true
+  ########################
+  # SET PARENT INTERFACE #
+  ########################
+  - name: "FIREWALL - VLAN CONFIG - SET PARENT INTERFACE [{{opnsense_roas_vlan_parent_if}}]"
+    community.general.xml:
+      xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/if"
+      value: "{{opnsense_roas_vlan_parent_if}}"
+      pretty_print: true
+  #
+  vars:
+    generated_uuid: "{{current_network.vlan_tag | to_uuid}}"
+    vlan_if: 'vlan{{"%03d" % (current_network.vlan_tag)}}'
+...

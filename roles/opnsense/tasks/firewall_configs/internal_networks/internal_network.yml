@@ -1,0 +1,21 @@
+---
+#
+#################################################################
+# EACH CONFIGURATION STEP OF AN INTERNAL NETWORK IS LISTED HERE #
+#################################################################
+#
+#################################
+# BUILD L2 (VLAN) CONFIGURATION #
+#################################
+#
+- name: "FIREWALL - CREATE L2 VLAN [ID: {{current_network.vlan_tag}}]"
+  ansible.builtin.include_tasks: ./network_components/vlan/vlan.yml
+#
+##################################################
+# GENERATE FIREWALL INTERFACE FOR VLAN INTERFACE #
+##################################################
+#
+- name: "FIREWALL - BIND L2 VLAN [ID: {{current_network.vlan_tag}}] FOR FIREWALL USAGE"
+  ansible.builtin.include_tasks: ./network_components/vlan/vlan_if_assignment.yml
+#
+...
