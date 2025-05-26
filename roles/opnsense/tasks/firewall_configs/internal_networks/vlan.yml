@@ -25,10 +25,10 @@
   ###################
   # SET DESCRIPTION #
   ###################
-  - name: "FIREWALL - VLAN CONFIG - SET DESCRIPTION [{{current_network.vlan_desc}}]"
+  - name: "FIREWALL - VLAN CONFIG - SET DESCRIPTION [{{current_network.name}}]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/descr"
-      value: "{{current_network.vlan_desc}}"
+      value: "{{current_network.name}}"
       pretty_print: true
   #################
   # SET PCP (QoS) #

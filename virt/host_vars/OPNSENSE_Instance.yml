@@ -25,42 +25,32 @@ opnsense_internal_network_defs:
   #############################
   - name: MGMT
     vlan_tag: 10
-    vlan_desc: MGMT VLAN
   #############################
   - name: RESTRICTED MGMT
     vlan_tag: 11
-    vlan_desc: RESTRICTED MGMT VLAN
   #############################
   - name: PROXMOX BACKUP
     vlan_tag: 20
-    vlan_desc: PROXMOX BACKUP VLAN
   #############################
   - name: SELF-HOSTED SERVICES
     vlan_tag: 30
-    vlan_desc: SELF-HOSTED SERVICES VLAN
   #############################
   - name: TOOLS4EVER
     vlan_tag: 40
-    vlan_desc: TOOLS4EVER VLAN
   #############################
   - name: EXPERIMENTATION
     vlan_tag: 50
-    vlan_desc: EXPERIMENTATION VLAN
   #############################
   - name: CAMERA
     vlan_tag: 60
-    vlan_desc: CAMERA VLAN
   #############################
   - name: IOT
     vlan_tag: 70
-    vlan_desc: IOT VLAN
   #############################
   - name: FAMILY
     vlan_tag: 80
-    vlan_desc: FAMILY VLAN
   #############################
   - name: GUEST
     vlan_tag: 90
-    vlan_desc: GUEST VLAN
 #
 ...
