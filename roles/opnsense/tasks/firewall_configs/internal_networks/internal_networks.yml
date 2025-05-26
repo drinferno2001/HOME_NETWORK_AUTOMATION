@@ -1,0 +1,29 @@
+---
+#
+#######################################################
+# INTERNAL NETWORK CONFIGURATIONS ARE KICKED OFF HERE #
+#######################################################
+#
+###################################
+# PREP: REMOVE DEFAULT VLAN ENTRY #
+###################################
+#
+- name: "FIREWALL - NETWORK BUILD PREP - REMOVE DEFAULT VLAN CONFIGURATION"
+  community.general.xml:
+    xpath: "/opnsense/vlans/vlan[count(@uuid)=0]"
+    state: "absent"
+    pretty_print: true
+#
+##############################
+# GENERATE INTERNAL NETWORKS #
+##############################
+#
+- name: "FIREWALL - BUILD INTERNAL NETWORK CONFIGURATIONS"
+  ansible.builtin.include_tasks: network.yml
+  loop:
+    "{{opnsense_internal_network_defs}}"
+  loop_control:
+    label: "{{current_network.name}}"
+    loop_var: current_network
+#
+...

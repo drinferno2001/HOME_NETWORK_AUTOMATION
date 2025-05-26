@@ -10,11 +10,11 @@
   ############
   - name: FIREWALL - CONFIGURE HOSTNAME
     ansible.builtin.include_tasks: firewall_configs/hostname.yml
-  #########
-  # VLANS #
-  #########
-  - name: FIREWALL - CONFIGURE VLANS
-    ansible.builtin.include_tasks: ./vlans/configure.yml
+  #####################
+  # INTERNAL NETWORKS #
+  #####################
+  - name: FIREWALL - CONFIGURE INTERNAL NETWORKS
+    ansible.builtin.include_tasks: ./internal_networks/internal_networks.yml
   ################
   module_defaults:
     community.general.xml:
