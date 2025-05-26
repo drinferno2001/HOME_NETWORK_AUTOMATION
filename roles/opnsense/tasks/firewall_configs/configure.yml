@@ -14,7 +14,7 @@
   # INTERNAL NETWORKS #
   #####################
   - name: FIREWALL - CONFIGURE INTERNAL NETWORKS
-    ansible.builtin.include_tasks: ./internal_networks/internal_networks.yml
+    ansible.builtin.include_tasks: ./internal_networks/internal_network_builder.yml
   ################
   module_defaults:
     community.general.xml:

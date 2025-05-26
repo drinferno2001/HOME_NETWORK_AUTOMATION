@@ -19,7 +19,7 @@
 ##############################
 #
 - name: "FIREWALL - BUILD INTERNAL NETWORK CONFIGURATIONS"
-  ansible.builtin.include_tasks: network.yml
+  ansible.builtin.include_tasks: internal_network.yml
   loop:
     "{{opnsense_internal_network_defs}}"
   loop_control:
