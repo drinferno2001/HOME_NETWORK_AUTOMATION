@@ -1,0 +1,35 @@
+---
+#
+######################################
+# VLAN FIREWALL INTERFACE ASSIGNMENT #
+######################################
+#
+######################################
+# GENERATE FIREWALL INTERFACE ITSELF #
+######################################
+#
+- name: "FIREWALL - GENERATE FIREWALL INTERFACE"
+  community.general.xml:
+    xpath: "/opnsense/interfaces/opt{{current_network.vlan_tag}}"
+    state: present
+    pretty_print: true
+#
+#####################
+# ASSIGN VLAN TO IT #
+#####################
+#
+- name: "FIREWALL - ASSIGN VLAN TO IT"
+  community.general.xml:
+    xpath: "/opnsense/interfaces/opt{{current_network.vlan_tag}}"
+    set_children:
+      - if: 'vlan{{"%03d" % (current_network.vlan_tag)}}'
+      - descr: '{{current_network.name | regex_replace("[\s]+", "_")}}'
+      - enable: "1"
+      - lock: "1"
+      - spoofmac
+      - blockbogons: "1"
+      - ipaddr: "10.19.{{current_network.vlan_tag}}.254"
+      - subnet: "24"
+    pretty_print: true
+#
+...

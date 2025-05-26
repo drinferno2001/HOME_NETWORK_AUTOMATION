@@ -8,7 +8,14 @@
 # BUILD L2 (VLAN) CONFIGURATION #
 #################################
 #
-- name: "FIREWALL - PROCESS L2 VLAN [ID: {{current_network.vlan_tag}}] CONFIGURATIONS"
+- name: "FIREWALL - CREATE L2 VLAN [ID: {{current_network.vlan_tag}}]"
   ansible.builtin.include_tasks: vlan.yml
+#
+##################################################
+# GENERATE FIREWALL INTERFACE FOR VLAN INTERFACE #
+##################################################
+#
+- name: "FIREWALL - BIND L2 VLAN [ID: {{current_network.vlan_tag}}] FOR FIREWALL USAGE"
+  ansible.builtin.include_tasks: vlan_if_assignment.yml
 #
 ...
