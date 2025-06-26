@@ -43,7 +43,7 @@
     exists_msg: >- 
       [{{control_node_config_file_path}}] exists. Processing...
 #
-- name: "CONTROL NODE - END EXECUTION DUE TO MISSING LOCAL CONFIG FILE: [{{control_node_config_file_path}}]?"
+- name: "CONTROL NODE - END EXECUTION DUE TO MISSING LOCAL CONFIG FILE?"
   ansible.builtin.meta: end_host
   when: not local_file_metadata.stat.exists
 #
