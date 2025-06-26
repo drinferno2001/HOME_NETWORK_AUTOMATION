@@ -57,7 +57,7 @@
     msg: "{{(remote_file_metadata.stat.checksum == local_file_metadata.stat.checksum) | ternary(match_msg, no_match_msg)}}"
   vars:
     no_match_msg: >-
-      [{{control_node_config_file_path}}] exists on control node but has different content than 
+      [{{control_node_config_file_path}}] exists on control node but has different content than
       what's existing on the managed node at [{{config_file_path}}].
       If you're running in changed mode, it will need to be pulled down manually
       to the control node beforehand. All further actions will be skipped...
