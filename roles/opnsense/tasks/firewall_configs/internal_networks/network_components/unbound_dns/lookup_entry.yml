@@ -1,0 +1,66 @@
+---
+#
+###########################################
+# GENERATE UNBOUND QUERY FORWARDING ENTRY #
+###########################################
+#
+- name: "GENERATE ENTRY USING UUID [{{dot_uuid}}]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]
+    state: present
+    pretty_print: true
+#
+- name: "ENABLING ENTRY"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/enabled
+    value: "1"
+    pretty_print: true
+#
+- name: "SET [TYPE] TO [forward]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/type
+    value: "forward"
+    pretty_print: true
+#
+- name: "SET [DOMAIN] TO [{{domain}}]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/domain
+    value: "{{domain}}"
+    pretty_print: true
+#
+- name: "SET [SERVER] TO [127.0.0.1]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/server
+    value: "127.0.0.1"
+    pretty_print: true
+#
+- name: "SET [PORT] TO [53053]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/port
+    value: "53053"
+    pretty_print: true
+#
+- name: "ADD [VERIFY] OPTION"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/verify
+    pretty_print: true
+#
+- name: "SET [FORWARD_TCP_UPSTREAM] TO [0]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/forward_tcp_upstream
+    value: "0"
+    pretty_print: true
+#
+- name: "SET [FORWARD_FIRST] TO [0]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/forward_first
+    value: "0"
+    pretty_print: true
+#
+- name: "SET [DESCRIPTION] TO [{{description}}]"
+  community.general.xml:
+    xpath: /opnsense/OPNsense/unboundplus/dots/dot[@uuid="{{dot_uuid}}"]/description
+    value: "{{description}}"
+    pretty_print: true
+#
+...

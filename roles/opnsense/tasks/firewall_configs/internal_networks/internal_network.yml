@@ -18,4 +18,11 @@
 - name: "FIREWALL - BIND L2 VLAN [ID: {{current_network.vlan_tag}}] FOR FIREWALL USAGE"
   ansible.builtin.include_tasks: ./network_components/vlan/vlan_if_assignment.yml
 #
+################################################
+# CONFIGURE FORWARDING FROM UNBOUND TO DNSMASQ #
+################################################
+#
+- name: "FIREWALL - CONFIGURING FORWARDING OF UNBOUND DNS FOR NETWORK [{{current_network.name}}]"
+  ansible.builtin.include_tasks: ./network_components/unbound_dns/unbound_dns.yml
+#
 ...
