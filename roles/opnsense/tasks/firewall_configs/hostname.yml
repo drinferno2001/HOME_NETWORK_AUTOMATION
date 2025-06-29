@@ -4,7 +4,7 @@
 # SET HOSTNAME #
 ################
 #
-- name: FIREWALL - SET HOSTNAME
+- name: SET HOSTNAME
   community.general.xml:
     xpath: /opnsense/system/hostname
     value: "{{opnsense_hostname}}"

@@ -4,25 +4,30 @@
 # EACH CONFIGURATION STEP OF AN INTERNAL NETWORK IS LISTED HERE #
 #################################################################
 #
-#################################
-# BUILD L2 (VLAN) CONFIGURATION #
-#################################
-#
-- name: "FIREWALL - CREATE L2 VLAN [ID: {{current_network.vlan_tag}}]"
-  ansible.builtin.include_tasks: ./network_components/vlan/vlan.yml
-#
-##################################################
-# GENERATE FIREWALL INTERFACE FOR VLAN INTERFACE #
-##################################################
-#
-- name: "FIREWALL - BIND L2 VLAN [ID: {{current_network.vlan_tag}}] FOR FIREWALL USAGE"
-  ansible.builtin.include_tasks: ./network_components/vlan/vlan_if_assignment.yml
-#
-################################################
-# CONFIGURE FORWARDING FROM UNBOUND TO DNSMASQ #
-################################################
-#
-- name: "FIREWALL - CONFIGURING FORWARDING OF UNBOUND DNS FOR NETWORK [{{current_network.name}}]"
-  ansible.builtin.include_tasks: ./network_components/unbound_dns/unbound_dns.yml
+- block:
+  #################################
+  # BUILD L2 (VLAN) CONFIGURATION #
+  #################################
+  #
+  - name: "{{network_task_name_prefix}} - CREATE {{vlan_task_name_prefix}}"
+    ansible.builtin.include_tasks: ./network_components/vlan/vlan.yml
+  #
+  ##################################################
+  # GENERATE FIREWALL INTERFACE FOR VLAN INTERFACE #
+  ##################################################
+  #
+  - name: "{{network_task_name_prefix}} - BIND {{vlan_task_name_prefix}} FOR FIREWALL RULES"
+    ansible.builtin.include_tasks: ./network_components/vlan/vlan_if_assignment.yml
+  #
+  ###########################
+  # CONFIGURE UNBOUND (DNS) #
+  ###########################
+  #
+  - name: "{{network_task_name_prefix}} - CONFIGURE UNBOUND DNS"
+    ansible.builtin.include_tasks: ./network_components/unbound_dns/unbound_dns.yml
+  #
+  vars:
+    network_task_name_prefix: "INTERNAL NETWORK [{{current_network.name}}]"
+    vlan_task_name_prefix: "VLAN [ID: {{current_network.vlan_tag}}]"
 #
 ...

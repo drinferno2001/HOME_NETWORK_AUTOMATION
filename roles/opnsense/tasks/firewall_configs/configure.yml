@@ -8,12 +8,12 @@
   ############
   # HOSTNAME #
   ############
-  - name: FIREWALL - CONFIGURE HOSTNAME
+  - name: CONFIGURE HOSTNAME
     ansible.builtin.include_tasks: firewall_configs/hostname.yml
   #####################
   # INTERNAL NETWORKS #
   #####################
-  - name: FIREWALL - CONFIGURE INTERNAL NETWORKS
+  - name: RUNNING INTERNAL NETWORK BUILDER
     ansible.builtin.include_tasks: ./internal_networks/internal_network_builder.yml
   ################
   module_defaults:
