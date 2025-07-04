@@ -12,5 +12,6 @@ config_file_path: /conf/config.xml
 #
 ns_unbound_a_qf: "11111111-2222-3333-4444-555555555555"
 ns_unbound_ptr_qf: "11111110-2222-3333-4444-555555555555"
+ns_dnsmasq_dhcp_scope: "11111100-2222-3333-4444-555555555555"
 #
 ...

@@ -5,6 +5,7 @@
 #################################################################
 #
 - block:
+  #
   #################################
   # BUILD L2 (VLAN) CONFIGURATION #
   #################################
@@ -25,6 +26,13 @@
   #
   - name: "{{network_task_name_prefix}} - CONFIGURE UNBOUND DNS"
     ansible.builtin.include_tasks: ./network_components/unbound_dns/unbound_dns.yml
+  #
+  #####################
+  # CONFIGURE DNSMASQ #
+  #####################
+  #
+  - name: "{{network_task_name_prefix}} - CONFIGURE DNSMASQ DHCP"
+    ansible.builtin.include_tasks: ./network_components/dnsmasq_dhcp/scopes.yml
   #
   vars:
     network_task_name_prefix: "INTERNAL NETWORK [{{current_network.name}}]"

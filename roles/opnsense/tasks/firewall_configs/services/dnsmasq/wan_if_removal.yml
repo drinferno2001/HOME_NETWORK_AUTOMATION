@@ -1,0 +1,27 @@
+---
+#
+#############################################
+# REMOVE WAN INTERFACE FROM DHCP INTERFACES #
+#############################################
+#
+- name: "DNSMASQ DHCP - PULL LIST OF ALL OTHER INTERFACES"
+  community.general.xml:
+    xpath: /opnsense/interfaces/*
+    content: attribute
+    pretty_print: true
+  register: dhcp_if_list
+#
+- name: "DNSMASQ DHCP - ADDING ALL OTHER INTERFACES"
+  community.general.xml:
+    xpath: /opnsense/dnsmasq/interface
+    value: "{{ dhcp_if_list.matches | 
+      map('dict2items') | 
+      map('first') | 
+      map(attribute='key') | 
+      select('!=', 'wan') | 
+      select('!=', 'lo0') | 
+      join(',') }}"
+    state: present
+    pretty_print: true
+#
+...

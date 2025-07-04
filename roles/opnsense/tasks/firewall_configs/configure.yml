@@ -8,14 +8,31 @@
   ############
   # HOSTNAME #
   ############
+  #
   - name: CONFIGURE HOSTNAME
     ansible.builtin.include_tasks: firewall_configs/hostname.yml
-  #####################
-  # INTERNAL NETWORKS #
-  #####################
+  #  
+  ####################################
+  # CONFIGURE BASIC DNSMASQ SETTINGS #
+  ####################################
+  #
+  - name: CONFIGURE BASIC DNSMASQ SETTINGS
+    ansible.builtin.include_tasks: ./services/dnsmasq/initial_config.yml
+  #
+  ###############################
+  # CONFIGURE INTERNAL NETWORKS #
+  ###############################
+  #
   - name: RUNNING INTERNAL NETWORK BUILDER
     ansible.builtin.include_tasks: ./internal_networks/internal_network_builder.yml
-  ################
+  #
+  #######################################################
+  # CONFIGURE DNSMASQ DHCP TO NOT INCLUDE WAN INTERFACE #
+  #######################################################
+  #
+  - name: CONFIGURE DNSMASQ - REMOVE WAN FROM DHCP INTERFACES
+    ansible.builtin.include_tasks: ./services/dnsmasq/wan_if_removal.yml
+  #
   module_defaults:
     community.general.xml:
       path: "{{control_node_config_file_path}}"
