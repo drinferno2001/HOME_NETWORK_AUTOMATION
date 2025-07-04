@@ -1,0 +1,21 @@
+---
+#
+####################################################
+# SETTING UP PRE-REQUISITES ON UBUNTU CONTROL NODE #
+####################################################
+#
+- block:
+  - name: INSTALL PRE-REQUISITE OS PACKAGES ON CONTROL NODE
+    ansible.builtin.include_tasks: ./control_node_prep.yml
+  become: true
+  become_user: root
+  become_method: ansible.builtin.sudo
+#
+###################################
+# PREPARE FOR CONFIGURATION BUILD #
+###################################
+#
+- name: DOWNLOADING EXISTING CONFIGURATION FILE FROM FIREWALL
+  ansible.builtin.include_tasks: ./config_file_prep.yml
+#
+...

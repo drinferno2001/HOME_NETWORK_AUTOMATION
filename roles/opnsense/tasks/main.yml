@@ -1,22 +1,11 @@
 ---
 #
-####################################################
-# SETTING UP PRE-REQUISITES ON UBUNTU CONTROL NODE #
-####################################################
+##############################
+# INITIAL CONFIGURATION PREP #
+##############################
 #
-- block:
-  - name: INSTALL PRE-REQUISITE OS PACKAGES ON CONTROL NODE
-    ansible.builtin.include_tasks: ./initial_prep/control_node_prep.yml
-  become: true
-  become_user: root
-  become_method: ansible.builtin.sudo
-#
-###################################
-# PREPARE FOR CONFIGURATION BUILD #
-###################################
-#
-- name: DOWNLOADING EXISTING CONFIGURATION FILE FROM FIREWALL
-  ansible.builtin.include_tasks: ./initial_prep/config_file_prep.yml
+- name: PREP FOR CONFIGURATION BUILD
+  ansible.builtin.include_tasks: initial_prep/configure.yml
 #
 ############################################
 # GENERATE OPNSENSE FIREWALL CONFIGURATION #
