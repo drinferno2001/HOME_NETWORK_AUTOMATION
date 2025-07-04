@@ -10,7 +10,9 @@
   ############
   #
   - name: CONFIGURE HOSTNAME
-    ansible.builtin.include_tasks: firewall_configs/hostname.yml
+    community.general.xml:
+      xpath: /opnsense/system/hostname
+      value: "{{opnsense_hostname}}"
   #  
   ####################################
   # CONFIGURE BASIC DNSMASQ SETTINGS #
