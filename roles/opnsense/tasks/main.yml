@@ -14,14 +14,11 @@
 - name: BUILD FIREWALL CONFIGURATION FILE
   ansible.builtin.include_tasks: xml_configs/configure.yml
 #
-###################
-# REBOOT FIREWALL #
-###################
+################################
+# RUN POST-CONFIGURATION TASKS #
+################################
 #
-#- name: Reboot Firewall
-#  ansible.builtin.reboot:
-#    msg: Rebooting to cement Ansible configuration...
-#  vars: 
-#    ansible_python_interpreter: "/usr/local/bin/python3"
+- name: RUN POST-CONFIGURATION TASKS
+  ansible.builtin.include_tasks: post_config_actions/configure.yml
 #
 ...
