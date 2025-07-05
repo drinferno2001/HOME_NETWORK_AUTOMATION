@@ -1,0 +1,27 @@
+---
+#
+####################################################################
+# REMOVAL (OR DISABLING) OF CERTAIN FIREWALL DEFAULTS IS DONE HERE #
+####################################################################
+#
+###################################
+# PREP: REMOVE DEFAULT VLAN ENTRY #
+###################################
+#
+- name: "REMOVE DEFAULT VLAN CONFIGURATION"
+  community.general.xml:
+    xpath: "/opnsense/vlans/vlan[count(@uuid)=0]"
+    state: "absent"
+    pretty_print: true
+#
+#############################################
+# DISABLE IPv4 LAN ISC DHCPv4 FUNCTIONALITY #
+#############################################
+#
+- name: "ISC DHCPv4 - DISABLE FOR [LAN] INTERFACE"
+  community.general.xml:
+    xpath: /opnsense/dhcpd/lan/enable
+    state: absent
+    pretty_print: true
+#
+...

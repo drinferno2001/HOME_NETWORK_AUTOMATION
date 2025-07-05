@@ -5,6 +5,13 @@
 ####################################################
 #
 - block:
+  ##################################
+  # TURN OFF UN-NECESSARY DEFAULTS #
+  ##################################
+  #
+  - name: DISABLE UN-NEEDED DEFAULTS
+    ansible.builtin.include_tasks: ./miscellanous/remove_defaults.yml
+  #
   ############
   # HOSTNAME #
   ############
@@ -28,12 +35,12 @@
   - name: RUNNING INTERNAL NETWORK BUILDER
     ansible.builtin.include_tasks: ./internal_networks/internal_network_builder.yml
   #
-  #######################################################
-  # CONFIGURE DNSMASQ DHCP TO NOT INCLUDE WAN INTERFACE #
-  #######################################################
+  #########################################################
+  # CONFIGURE DNSMASQ DHCP TO ONLY INCLUDE OPT INTERFACES #
+  #########################################################
   #
-  - name: CONFIGURE DNSMASQ - REMOVE WAN FROM DHCP INTERFACES
-    ansible.builtin.include_tasks: ./services/dnsmasq/wan_if_removal.yml
+  - name: SELECT APPLICABLE INTERFACES FOR DNSMASQ DHCP
+    ansible.builtin.include_tasks: ./services/dnsmasq/adjust_enabled_ifs.yml
   #
   module_defaults:
     community.general.xml:
