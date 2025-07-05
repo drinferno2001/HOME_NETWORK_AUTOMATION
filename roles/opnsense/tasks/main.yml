@@ -1,38 +1,24 @@
 ---
 #
-####################################################
-# SETTING UP PRE-REQUISITES ON UBUNTU CONTROL NODE #
-####################################################
+##############################
+# INITIAL CONFIGURATION PREP #
+##############################
 #
-- block:
-  - name: CONTROL NODE - INSTALL PRE-REQUISITE OS PACKAGES
-    ansible.builtin.include_tasks: control_node_prep.yml
-  become: true
-  become_user: root
-  become_method: ansible.builtin.sudo
-#
-###################################
-# PREPARE FOR CONFIGURATION BUILD #
-###################################
-#
-- name: FIREWALL - DOWNLOADING EXISTING CONFIGURATION FILE
-  ansible.builtin.include_tasks: config_file_prep.yml
+- name: PREP FOR CONFIGURATION BUILD
+  ansible.builtin.include_tasks: initial_prep/configure.yml
 #
 ############################################
 # GENERATE OPNSENSE FIREWALL CONFIGURATION #
 ############################################
 #
-- name: FIREWALL - BUILD CONFIGURATION
-  ansible.builtin.include_tasks: firewall_configs/configure.yml
+- name: BUILD FIREWALL CONFIGURATION FILE
+  ansible.builtin.include_tasks: xml_configs/configure.yml
 #
-###################
-# REBOOT FIREWALL #
-###################
+################################
+# RUN POST-CONFIGURATION TASKS #
+################################
 #
-#- name: Reboot Firewall
-#  ansible.builtin.reboot:
-#    msg: Rebooting to cement Ansible configuration...
-#  vars: 
-#    ansible_python_interpreter: "/usr/local/bin/python3"
+- name: RUN POST-CONFIGURATION TASKS
+  ansible.builtin.include_tasks: post_config_actions/configure.yml
 #
 ...

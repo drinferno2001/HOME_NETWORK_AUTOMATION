@@ -1,0 +1,35 @@
+---
+#
+###################################
+# BUILD UNBOUND DNS CONFIGURATION #
+###################################
+#
+- block:
+  #####################################################################
+  # ADD AN 'A' QUERY FORWARDING ENTRY (FOR HOSTNAME TO IP RESOLUTION) #
+  #####################################################################
+  #
+  - name: "{{unbound_task_name_prefix}} - GENERATE 'A' DNS ENTRY"
+    ansible.builtin.include_tasks: ./lookup_entry.yml
+    vars:
+      dns_record_task_name_prefix: "{{unbound_task_name_prefix}} - 'A' Record"
+      subdomain_name: '{{current_network.name | regex_replace("[\s]+", "-") | lower()}}'
+      domain: "{{subdomain_name}}.internal.firstgambrellianempire.com"
+      description: "{{current_network.name}} - FORWARD"
+      dot_uuid: "{{ current_network.vlan_tag | to_uuid(ns_unbound_a_qf) }}"
+  #
+  ######################################################################
+  # ADD A 'PTR' QUERY FORWARDING ENTRY (FOR IP TO HOSTNAME RESOLUTION) #
+  ######################################################################
+  #
+  - name: "{{unbound_task_name_prefix}} - GENERATE 'PTR' DNS ENTRY"
+    ansible.builtin.include_tasks: ./lookup_entry.yml
+    vars:
+      dns_record_task_name_prefix: "{{unbound_task_name_prefix}} - 'PTR' Record"
+      domain: "{{current_network.vlan_tag}}.19.10.in-addr.arpa"
+      description: "{{current_network.name}} - REVERSE"
+      dot_uuid: "{{ current_network.vlan_tag | to_uuid(ns_unbound_ptr_qf) }}"
+  #
+  vars:
+    unbound_task_name_prefix: "{{network_task_name_prefix}} - UNBOUND"
+...

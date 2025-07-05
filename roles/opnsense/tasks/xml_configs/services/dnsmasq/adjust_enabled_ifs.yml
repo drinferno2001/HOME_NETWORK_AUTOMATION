@@ -1,0 +1,29 @@
+---
+#
+##################################################
+# REMOVE NON-OPT INTERFACES FROM DHCP INTERFACES #
+##################################################
+#
+- name: "DNSMASQ DHCP - PULL LIST OF ALL INTERFACES"
+  community.general.xml:
+    xpath: /opnsense/interfaces/*
+    content: attribute
+    pretty_print: true
+  register: dhcp_if_list
+#
+- name: "DNSMASQ DHCP - SET ONLY FOR OPT INTERFACES"
+  community.general.xml:
+    xpath: /opnsense/dnsmasq/interface
+    # Exclude 'OPT1' as well because it will be used for management of the firewall for ANSIBLE
+    value: "{{ dhcp_if_list.matches | 
+      map('dict2items') | 
+      map('first') | 
+      map(attribute='key') | 
+      map('regex_search', 'opt.*') |
+      select('string') |
+      select('!=', 'opt1') |
+      join(',') }}"
+    state: present
+    pretty_print: true
+#
+...

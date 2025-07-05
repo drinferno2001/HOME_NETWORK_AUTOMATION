@@ -1,0 +1,40 @@
+---
+#
+#######################################
+# BUILD DNSMASQ GENERAL CONFIGURATION #
+#######################################
+#
+- block:
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ENABLING CONFIGURATION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/enable
+      value: "1"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [PORT] TO [{{dnsmasq_port}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/port
+      value: "{{dnsmasq_port}}"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [DNS FORWARDING (DISABLE)] TO [1]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/no_resolv
+      value: "1"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [DEFAULT DOMAIN] TO [{{default_domain_value}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp/domain
+      value: "{{default_domain_value}}"
+      state: present
+      pretty_print: true
+  vars:
+    dnsmasq_task_name_prefix: "DNSMASQ"
+    dnsmasq_port: "53053"
+    default_domain_value: "default.internal.firstgambrellianempire.com"
+...

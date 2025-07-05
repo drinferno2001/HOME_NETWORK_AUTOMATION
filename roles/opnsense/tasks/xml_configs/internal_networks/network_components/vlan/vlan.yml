@@ -8,7 +8,7 @@
   ############
   # SET UUID #
   ############
-  - name: "FIREWALL - VLAN CONFIG - GENERATE UUID [{{generated_uuid}}]"
+  - name: "{{vlan_subtask_name_prefix}} - GENERATE UUID [{{generated_uuid}}]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']"
       attribute: uuid
@@ -17,7 +17,7 @@
   #############################
   # STORE VLAN INTERFACE NAME #
   #############################
-  - name: "FIREWALL - VLAN CONFIG - SET INTERFACE NAME [{{vlan_if}}]"
+  - name: "{{vlan_subtask_name_prefix}} - SET INTERFACE NAME [{{vlan_if}}]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/vlanif"
       value: '{{vlan_if}}'
@@ -25,7 +25,7 @@
   ###################
   # SET DESCRIPTION #
   ###################
-  - name: "FIREWALL - VLAN CONFIG - SET DESCRIPTION [{{current_network.name}}]"
+  - name: "{{vlan_subtask_name_prefix}} - SET DESCRIPTION [{{current_network.name}}]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/descr"
       value: "{{current_network.name}}"
@@ -33,7 +33,7 @@
   #################
   # SET PCP (QoS) #
   #################
-  - name: "FIREWALL - VLAN CONFIG - SET PCP (L2 QoS) VALUE [0]"
+  - name: "{{vlan_subtask_name_prefix}} - SET PCP (L2 QoS) VALUE [0]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/pcp"
       value: "0"
@@ -41,20 +41,21 @@
   #########################
   # SET TRUNKING PROTOCOL #
   #########################
-  - name: "FIREWALL - VLAN CONFIG - ENABLE TRUNKING PROTOCOL AUTO-SELECTION"
+  - name: "{{vlan_subtask_name_prefix}} - ENABLE TRUNKING PROTOCOL AUTO-SELECTION"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/proto"
       pretty_print: true
   ########################
   # SET PARENT INTERFACE #
   ########################
-  - name: "FIREWALL - VLAN CONFIG - SET PARENT INTERFACE [{{opnsense_roas_vlan_parent_if}}]"
+  - name: "{{vlan_subtask_name_prefix}} - SET PARENT INTERFACE [{{opnsense_roas_vlan_parent_if}}]"
     community.general.xml:
       xpath: "/opnsense/vlans/vlan[tag/text()='{{current_network.vlan_tag}}']/if"
       value: "{{opnsense_roas_vlan_parent_if}}"
       pretty_print: true
   #
   vars:
+    vlan_subtask_name_prefix: "{{network_task_name_prefix}} - {{vlan_task_name_prefix}}"
     generated_uuid: "{{current_network.vlan_tag | to_uuid}}"
     vlan_if: 'vlan{{"%03d" % (current_network.vlan_tag)}}'
 ...

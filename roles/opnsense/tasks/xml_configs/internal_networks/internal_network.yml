@@ -1,0 +1,41 @@
+---
+#
+#################################################################
+# EACH CONFIGURATION STEP OF AN INTERNAL NETWORK IS LISTED HERE #
+#################################################################
+#
+- block:
+  #
+  #################################
+  # BUILD L2 (VLAN) CONFIGURATION #
+  #################################
+  #
+  - name: "{{network_task_name_prefix}} - CREATE {{vlan_task_name_prefix}}"
+    ansible.builtin.include_tasks: ./network_components/vlan/vlan.yml
+  #
+  ##################################################
+  # GENERATE FIREWALL INTERFACE FOR VLAN INTERFACE #
+  ##################################################
+  #
+  - name: "{{network_task_name_prefix}} - BIND {{vlan_task_name_prefix}} FOR FIREWALL RULES"
+    ansible.builtin.include_tasks: ./network_components/vlan/vlan_if_assignment.yml
+  #
+  ###########################
+  # CONFIGURE UNBOUND (DNS) #
+  ###########################
+  #
+  - name: "{{network_task_name_prefix}} - CONFIGURE UNBOUND DNS"
+    ansible.builtin.include_tasks: ./network_components/unbound_dns/unbound_dns.yml
+  #
+  #####################
+  # CONFIGURE DNSMASQ #
+  #####################
+  #
+  - name: "{{network_task_name_prefix}} - CONFIGURE DNSMASQ DHCP"
+    ansible.builtin.include_tasks: ./network_components/dnsmasq_dhcp/scopes.yml
+  #
+  vars:
+    network_task_name_prefix: "INTERNAL NETWORK [{{current_network.name}}]"
+    vlan_task_name_prefix: "VLAN [ID: {{current_network.vlan_tag}}]"
+#
+...

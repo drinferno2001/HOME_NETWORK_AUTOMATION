@@ -1,0 +1,49 @@
+---
+#
+####################################################
+# FIREWALL CONFIGURATION TASKS ARE KICKED OFF HERE #
+####################################################
+#
+- block:
+  ##################################
+  # TURN OFF UN-NECESSARY DEFAULTS #
+  ##################################
+  #
+  - name: DISABLE UN-NEEDED DEFAULTS
+    ansible.builtin.include_tasks: ./miscellanous/remove_defaults.yml
+  #
+  ############
+  # HOSTNAME #
+  ############
+  #
+  - name: CONFIGURE HOSTNAME
+    community.general.xml:
+      xpath: /opnsense/system/hostname
+      value: "{{opnsense_hostname}}"
+  #  
+  ####################################
+  # CONFIGURE BASIC DNSMASQ SETTINGS #
+  ####################################
+  #
+  - name: CONFIGURE BASIC DNSMASQ SETTINGS
+    ansible.builtin.include_tasks: ./services/dnsmasq/initial_config.yml
+  #
+  ###############################
+  # CONFIGURE INTERNAL NETWORKS #
+  ###############################
+  #
+  - name: RUNNING INTERNAL NETWORK BUILDER
+    ansible.builtin.include_tasks: ./internal_networks/internal_network_builder.yml
+  #
+  #########################################################
+  # CONFIGURE DNSMASQ DHCP TO ONLY INCLUDE OPT INTERFACES #
+  #########################################################
+  #
+  - name: SELECT APPLICABLE INTERFACES FOR DNSMASQ DHCP
+    ansible.builtin.include_tasks: ./services/dnsmasq/adjust_enabled_ifs.yml
+  #
+  module_defaults:
+    community.general.xml:
+      path: "{{control_node_config_file_path}}"
+#
+...

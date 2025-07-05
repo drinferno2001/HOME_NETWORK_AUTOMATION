@@ -1,0 +1,125 @@
+---
+#
+##########################################
+# BUILD DNSMASQ DHCP SCOPE CONFIGURATION #
+##########################################
+#
+- block:
+  - name: "{{dnsmasq_task_name_prefix}} - GENERATE SCOPE ENTRY USING UUID [{{scope_uuid}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [INTERFACE] TO [{{dhcp_if_name}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/interface
+      value: "{{dhcp_if_name}}"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [SET_TAG] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/set_tag
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [START_ADDRESS] TO [{{dhcp_start_addr}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/start_addr
+      value: "{{dhcp_start_addr}}"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [END_ADDRESS] TO [{{dhcp_end_addr}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/end_addr
+      value: "{{dhcp_end_addr}}"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [CONSTRUCTOR] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/constructor
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [MODE] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/mode
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [PREFIX_LEN] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/prefix_len
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [LEASE_TIME] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/lease_time
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [DOMAIN] TO [{{dhcp_domain}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/domain
+      value: "{{dhcp_domain}}"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [NOSYNC] TO [0]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/nosync
+      value: "0"
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [RA_MODE] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/ra_mode
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [RA_PRIORITY] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/ra_priority
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [RA_MTU] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/ra_mtu
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [RA_INTERVAL] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/ra_interval
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - ADD [RA_ROUTER_LIFETIME] OPTION"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/ra_router_lifetime
+      state: present
+      pretty_print: true
+  #
+  - name: "{{dnsmasq_task_name_prefix}} - SET [DESCRIPTION] TO [{{dhcp_description}}]"
+    community.general.xml:
+      xpath: /opnsense/dnsmasq/dhcp_ranges[@uuid="{{scope_uuid}}"]/description
+      value: "{{dhcp_description}}"
+      state: present
+      pretty_print: true
+  #
+  vars:
+    dnsmasq_task_name_prefix: "{{network_task_name_prefix}} - DNSMASQ DHCP"
+    scope_uuid: "{{ current_network.vlan_tag | to_uuid(ns_dnsmasq_dhcp_scope) }}"
+    dhcp_if_name: "opt{{current_network.vlan_tag}}"
+    dhcp_start_addr: "10.19.{{current_network.vlan_tag}}.100"
+    dhcp_end_addr: "10.19.{{current_network.vlan_tag}}.199"
+    dhcp_subdomain_name: '{{current_network.name | regex_replace("[\s]+", "-") | lower()}}'
+    dhcp_domain: "{{dhcp_subdomain_name}}.internal.firstgambrellianempire.com"
+    dhcp_description: "{{current_network.name}} - SCOPE"
+...

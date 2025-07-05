@@ -1,0 +1,13 @@
+---
+#
+###################
+# REBOOT FIREWALL #
+###################
+#
+#- name: Reboot Firewall
+#  ansible.builtin.reboot:
+#    msg: Rebooting to cement Ansible configuration...
+#  vars: 
+#    ansible_python_interpreter: "/usr/local/bin/python3"
+#
+...
