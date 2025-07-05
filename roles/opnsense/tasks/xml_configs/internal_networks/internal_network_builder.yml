@@ -4,16 +4,6 @@
 # INTERNAL NETWORK CONFIGURATIONS ARE KICKED OFF HERE #
 #######################################################
 #
-###################################
-# PREP: REMOVE DEFAULT VLAN ENTRY #
-###################################
-#
-- name: "INTERNAL NETWORK BUILD PREP - REMOVE DEFAULT VLAN CONFIGURATION"
-  community.general.xml:
-    xpath: "/opnsense/vlans/vlan[count(@uuid)=0]"
-    state: "absent"
-    pretty_print: true
-#
 ##############################
 # GENERATE INTERNAL NETWORKS #
 ##############################
